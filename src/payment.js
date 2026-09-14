@@ -1,8 +1,9 @@
-const processPayment = () => {
-  console.log("payment");
-  // Simulate some payment processing
+const processPayment = (log) => {
+  log.info('payment.processing');
+
+  // Simulate payment processing
   setTimeout(() => {
-    console.log("done");
+    log.info('payment.completed');
   }, 500);
 };
 
