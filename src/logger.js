@@ -1,6 +1,12 @@
-// Dummy file to exist in structure but not used correctly
-const logMessage = (msg) => {
-  console.log(msg);
-};
+const pino = require('pino');
 
-module.exports = { logMessage };
+const logger = pino({
+  timestamp: () => `,"ts":"${new Date().toISOString()}"`,
+  formatters: {
+    level: (label) => ({ level: label }),
+    bindings: () => ({ service: 'orders-api' }),
+  },
+  messageKey: 'msg',
+});
+
+module.exports = { logger };
