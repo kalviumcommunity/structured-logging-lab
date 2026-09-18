@@ -1,4 +1,6 @@
 const express = require('express');
+const crypto = require('crypto');
+const logger = require('./logger');
 const { connectDb } = require('./db');
 const ordersRouter = require('./routes/orders');
 const { processPayment } = require('./payment');
@@ -8,29 +10,36 @@ const port = 3000;
 
 app.use(express.json());
 
-// Intentionally vague startup logging
-console.log("starting");
+// Attach a unique request ID and child logger to each incoming request
+app.use((req, res, next) => {
+  req.id = crypto.randomUUID();
+  req.log = logger.child({ reqId: req.id });
+  req.log.info({ method: req.method, url: req.url }, 'Incoming request');
+  next();
+});
 
+logger.info('Initializing database connection...');
 connectDb();
 
 app.get('/', (req, res) => {
-  console.log("ok");
+  req.log.info('Health check successful');
   res.send('Orders API is running');
 });
 
 app.use('/orders', ordersRouter);
 
 app.post('/payments', (req, res) => {
-  console.log("payment started");
-  processPayment();
+  req.log.info({ orderId: req.body?.orderId }, 'Payment started');
+  processPayment(req.log);
   res.send('Payment processed');
 });
 
 app.get('/simulate-error', (req, res) => {
-  console.log("error happened");
+  req.log.error({ endpoint: '/simulate-error', statusCode: 500 }, 'Simulated error occurred');
   res.status(500).send('Internal Server Error');
 });
 
 app.listen(port, () => {
-  console.log(`done`);
+  logger.info({ port }, 'Orders API server listening');
 });
+
