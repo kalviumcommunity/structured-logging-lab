@@ -1,6 +1,33 @@
-// Dummy file to exist in structure but not used correctly
-const logMessage = (msg) => {
-  console.log(msg);
+const SERVICE = 'orders-api';
+
+const write = (level, context, msg) => {
+  const entry = {
+    ts: new Date().toISOString(),
+    level,
+    service: SERVICE,
+    msg,
+    ...context,
+  };
+
+  process.stdout.write(`${JSON.stringify(entry)}\n`);
 };
 
-module.exports = { logMessage };
+const createLogger = (context = {}) => ({
+  child(extraContext = {}) {
+    return createLogger({ ...context, ...extraContext });
+  },
+  debug(extraContext = {}, msg = 'debug') {
+    write('debug', { ...context, ...extraContext }, msg);
+  },
+  info(extraContext = {}, msg = 'info') {
+    write('info', { ...context, ...extraContext }, msg);
+  },
+  warn(extraContext = {}, msg = 'warn') {
+    write('warn', { ...context, ...extraContext }, msg);
+  },
+  error(extraContext = {}, msg = 'error') {
+    write('error', { ...context, ...extraContext }, msg);
+  },
+});
+
+module.exports = createLogger();

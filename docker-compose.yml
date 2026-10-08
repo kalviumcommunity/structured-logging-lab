@@ -1,7 +1,6 @@
-version: '3.8'
-
 services:
   orders-api:
+    container_name: orders-api
     build: .
     ports:
       - "3000:3000"
@@ -15,6 +14,7 @@ services:
       - postgres
 
   postgres:
+    container_name: structured-logging-postgres
     image: postgres:15-alpine
     environment:
       - POSTGRES_USER=myuser
