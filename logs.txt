@@ -1,0 +1,10 @@
+﻿
+> orders-api@1.0.0 start
+> node src/server.js
+
+{"ts":"2026-10-30T06:56:24.376Z","level":"info","service":"orders-api","msg":"starting"}
+connecting...
+{"ts":"2026-10-30T06:56:24.408Z","level":"info","service":"orders-api","port":3000,"msg":"server started and listening"}
+connected
+{"ts":"2026-10-30T06:57:29.018Z","level":"info","service":"orders-api","reqId":"484569c7-b68d-4579-a7e3-da8861402488","msg":"app.root"}
+{"ts":"2026-10-30T07:07:59.080Z","level":"error","service":"orders-api","reqId":"02eb875b-cef7-44c2-96f6-6edc29f635a3","msg":"error happened in simulate-error"}
