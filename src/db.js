@@ -1,4 +1,5 @@
 const { Pool } = require('pg');
+const { logger } = require('./logger');
 
 const pool = new Pool({
   host: process.env.DB_HOST || 'localhost',
@@ -9,20 +10,23 @@ const pool = new Pool({
 });
 
 const connectDb = async () => {
-  console.log("connecting...");
+  logger.info(
+    { host: process.env.DB_HOST || 'localhost', db: process.env.DB_NAME || 'ordersdb' },
+    'Connecting to database...'
+  );
   try {
     await pool.query('SELECT NOW()');
-    console.log("connected");
+    logger.info('Database connection established successfully');
   } catch (err) {
-    console.log("error");
-    console.log("retry");
+    logger.error({ err }, 'Failed to connect to database');
+    logger.warn('Will retry database connection on subsequent queries');
   }
 };
 
-const queryDb = async (text, params) => {
-  console.log("query...");
+const queryDb = async (text, params, log = logger) => {
+  log.info({ query: text }, 'Executing database query');
   const res = await pool.query(text, params);
-  console.log("finished");
+  log.info({ rowCount: res.rowCount }, 'Database query completed');
   return res;
 };
 

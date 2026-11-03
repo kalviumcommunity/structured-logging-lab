@@ -1,8 +1,10 @@
-const processPayment = () => {
-  console.log("payment");
+const { logger } = require('./logger');
+
+const processPayment = (orderId = 8841, log = logger) => {
+  log.info({ orderId }, 'Payment processing initiated');
   // Simulate some payment processing
   setTimeout(() => {
-    console.log("done");
+    log.info({ orderId }, 'Payment gateway transaction confirmed');
   }, 500);
 };
 
