@@ -3,6 +3,7 @@ version: '3.8'
 services:
   orders-api:
     build: .
+    container_name: orders-api
     ports:
       - "3000:3000"
     environment:
